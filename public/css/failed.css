@@ -1,0 +1,85 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:#f8fafc;
+    font-family:Arial, sans-serif;
+}
+
+.failed-card{
+    width:500px;
+    background:white;
+    padding:40px;
+    border-radius:16px;
+    text-align:center;
+    box-shadow:0 10px 30px rgba(0,0,0,0.08);
+}
+
+.icon{
+    width:90px;
+    height:90px;
+    margin:0 auto 20px;
+    border-radius:50%;
+    background:#fee2e2;
+    color:#dc2626;
+    font-size:50px;
+    font-weight:bold;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+h1{
+    margin-bottom:15px;
+    color:#111827;
+}
+
+p{
+    color:#6b7280;
+    line-height:1.6;
+}
+
+.help-text{
+    margin-top:15px;
+    font-size:14px;
+}
+
+.buttons{
+    margin-top:30px;
+    display:flex;
+    gap:15px;
+    justify-content:center;
+}
+
+.retry-btn,
+.home-btn{
+    text-decoration:none;
+    padding:12px 24px;
+    border-radius:8px;
+    font-weight:600;
+}
+
+.retry-btn{
+    background:#20c997;
+    color:white;
+}
+
+.home-btn{
+    background:#e5e7eb;
+    color:#111827;
+}
+
+.retry-btn:hover{
+    opacity:0.9;
+}
+
+.home-btn:hover{
+    background:#d1d5db;
+}

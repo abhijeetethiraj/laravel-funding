@@ -1,0 +1,115 @@
+* {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+
+:root {
+	--green: #2ba88a;
+	--green-dark: #1f7d68;
+	--text: #23413a;
+	--muted: #667c76;
+	--card: #ffffff;
+	--bg: #eef8f4;
+	--border: rgba(43, 168, 138, 0.14);
+	--shadow: 0 24px 70px rgba(21, 72, 57, 0.16);
+}
+
+html, body {
+	height: 100%;
+}
+
+body {
+	font-family: Arial, Helvetica, sans-serif;
+	color: var(--text);
+	background:
+		radial-gradient(circle at top, rgba(43, 168, 138, 0.14), transparent 38%),
+		linear-gradient(180deg, #f7fbf9 0%, var(--bg) 100%);
+}
+
+.thank-page {
+	min-height: 100vh;
+	display: grid;
+	place-items: center;
+	padding: 24px;
+}
+
+.thank-card {
+	width: min(100%, 560px);
+	background: var(--card);
+	border: 1px solid var(--border);
+	border-radius: 28px;
+	box-shadow: var(--shadow);
+	padding: 40px 32px 34px;
+	text-align: center;
+}
+
+.thank-card__icon {
+	width: 72px;
+	height: 72px;
+	margin: 0 auto 18px;
+	border-radius: 50%;
+	display: grid;
+	place-items: center;
+	background: linear-gradient(135deg, var(--green), #51c39f);
+	color: #fff;
+	font-size: 2rem;
+	font-weight: 700;
+	box-shadow: 0 16px 34px rgba(43, 168, 138, 0.28);
+}
+
+.thank-card__eyebrow {
+	color: var(--green-dark);
+	font-size: 0.9rem;
+	font-weight: 700;
+	letter-spacing: 0.16em;
+	text-transform: uppercase;
+	margin-bottom: 10px;
+}
+
+.thank-card h1 {
+	font-size: clamp(2rem, 4vw, 3rem);
+	line-height: 1.1;
+	margin-bottom: 14px;
+}
+
+.thank-card__message {
+	color: var(--muted);
+	font-size: 1rem;
+	line-height: 1.7;
+	max-width: 40ch;
+	margin: 0 auto 28px;
+}
+
+.thank-card__button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 48px;
+	padding: 0 24px;
+	border-radius: 999px;
+	background: linear-gradient(135deg, var(--green), #42b594);
+	color: #fff;
+	font-weight: 700;
+	text-decoration: none;
+	box-shadow: 0 14px 28px rgba(43, 168, 138, 0.2);
+	transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.thank-card__button:hover {
+	transform: translateY(-1px);
+	box-shadow: 0 18px 30px rgba(43, 168, 138, 0.24);
+}
+
+@media (max-width: 640px) {
+	.thank-card {
+		padding: 32px 20px 28px;
+		border-radius: 22px;
+	}
+
+	.thank-card__icon {
+		width: 64px;
+		height: 64px;
+		font-size: 1.75rem;
+	}
+}
