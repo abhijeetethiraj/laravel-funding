@@ -1,18 +1,29 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use App\Models\Campaign;
 use Illuminate\Http\Request;
-use App\Models\CampaignImage;
+use App\Repositories\CampaignRepository;
 
 class CampaignController extends Controller
 {
+    protected $campaignRepository;
 
+     public function __construct
+     (
+        CampaignRepository $campaignRepository
+     )
+     {
+       $this->campaignRepository = $campaignRepository;
+     }
+    
+     
     public function home()
     {
-        $campaigns = Campaign::with('images')->latest()->get();
+        
+        $campaigns = $this->campaignRepository->getAll();
+     
         return view('home', compact('campaigns'));
+    
     }
 
 
@@ -24,34 +35,13 @@ class CampaignController extends Controller
     public function store(Request $request)
     {
           
-        $campaign = Campaign::create([
-            'title' => $request->title,
-            'story' => $request->story,
-            'target_amount' => $request->target_amount,
-            'campaigner_name' => $request->campaigner_name,
-            'campaigner_city' => $request->campaigner_city,
-            'beneficiary_name' => $request->beneficiary_name,
-            'beneficiary_relation' => $request->beneficiary_relation,
-            'hospital_name' => $request->hospital_name,
-        ]);
-
-        if ($request->hasFile('images')) {
-
-            foreach ($request->file('images') as $image) {
-
-                $imageData = file_get_contents($image);
-
-                CampaignImage::create([
-                    'campaign_id' => $campaign->id,
-                    'image_data' => base64_encode($imageData)
-                ]);
-            }
-        }
+       $this->campaignRepository->create($request);
+      
     }
 
     public function showDonate($id)
     {
-        $campaign =  Campaign::findOrFail($id);
+        $campaign =  $this->campaignRepository->getById($id);
         return view(
             'donate',
             compact('campaign')
@@ -60,7 +50,7 @@ class CampaignController extends Controller
 
     public function show($id)
     {
-        $campaign = Campaign::with('images')->findOrFail($id);
+        $campaign = $this->campaignRepository->getWithImages($id);
 
         return view(
             'campaign.show',
@@ -74,10 +64,7 @@ class CampaignController extends Controller
     }
     public function failed(Request $request)
     {
-        $campaign = Campaign::findOrFail(
-            $request->campaign_id
-        );
-
+        $campaign = $this->campaignRepository->getById($request->campaign_id);
         return view(
             'campaign.failed',
             compact('campaign')

@@ -11,42 +11,18 @@
 <body>
     <h1>{{ $campaign->title }}</h1>
 
-    <form id="donation-form" action="{{ route('donation.store') }}" method="POST" >
+    <form>
         @csrf
 
         @guest
-        <input
-            type="text"
-            name="donor_name"
-            placeholder="Your Name">
-
-        <input
-            type="email"
-            name="donor_email"
-            placeholder="Your Email">
+        <input type="text" name="donor_name" placeholder="Your Name">
+        <input type="email" name="donor_email" placeholder="Your Email">
         @endguest
-
-
 
         <input
             type="number"
             id="amount"
-            name="amount"
             placeholder="Enter Amount">
-
-        <input
-            type="hidden"
-            name="campaign_id"
-            value="{{ $campaign->id }}">
-
-        <input
-            type="hidden"
-            name="payment_id"
-            id="payment_id">
-        <input
-            type="hidden"
-            name="payment_response"
-            id="payment_response">
 
         <button
             type="button"
@@ -60,7 +36,7 @@
     <script>
         const donateBtn = document.getElementById("donate-btn");
 
-        donateBtn.addEventListener("click", function() {
+        donateBtn.addEventListener("click", async function() {
 
             const amount =
                 document.getElementById("amount").value;
@@ -70,43 +46,52 @@
                 return;
             }
 
+            const donorName = document.querySelector('input[name="donor_name"]')?.value;
+            const donorEmail = document.querySelector('input[name="donor_email"]')?.value;
+          
+
+            const orderResponse = await fetch("/create-order", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": document.querySelector(
+                        'input[name="_token"]'
+                    ).value
+                },
+                body: JSON.stringify({
+                    amount: amount,
+                    campaign_id: "{{ $campaign->id }}",
+                    donor_name: donorName,
+                    donor_email: donorEmail
+                })
+            });
+
+            const order = await orderResponse.json();
+
+            console.log(order);
+
             const options = {
 
                 key: "rzp_test_T53I1W3nMKK3Rq",
 
 
-                amount: amount * 100,
+                amount: order.amount,
 
-                currency: "INR",
+                currency: order.currency,
 
+                order_id: order.id,
                 name: "ImpactGuru Donor",
 
                 description: "Campaign Donation",
 
-                handler: function(response) {
-
-
-
-                    console.log("PAYMENT SUCCESS");
-
-                    document.getElementById("payment_id").value =
-                        response.razorpay_payment_id;
-
-                    document.getElementById("payment_response").value =
-                        JSON.stringify(response);
-
-                    console.log("ABOUT TO SUBMIT");
-
-                    document.getElementById("donation-form").submit();
-
-
-
-                },
+                callback_url: "/payment/callback",
 
                 modal: {
                     ondismiss: function() {
-                        console.log("Payment Cancelled");
+                        window.location.href =
+                            "/campaign/failed?campaign_id={{ $campaign->id }}";
                     }
+
                 },
 
                 theme: {
@@ -118,10 +103,9 @@
 
             rzp.on('payment.failed', function(response) {
 
-                console.log(response.error);
+                console.log(response);
 
                 window.location.href =
-                    window.location.href =
                     "/campaign/failed?campaign_id={{ $campaign->id }}";
 
             });

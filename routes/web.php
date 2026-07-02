@@ -10,51 +10,10 @@ use Illuminate\Support\Facades\Mail;
 
 Route::get('/', [CampaignController::class, 'home']);
 
-
-Route::get('/campaign/create', [CampaignController::class, 'create']);
-
-Route::get('/campaign/thank', [CampaignController::class, 'thank'])
-    ->name('campaign.thank');
-
-Route::get(
-    '/campaign/{id}/donate',
-    [CampaignController::class, 'showDonate']
-);
-
-Route::get('/campaign/{id}', [CampaignController::class, 'show'])
-    ->whereNumber('id');
-
-Route::post('/campaign/store', [CampaignController::class, 'store']);
-
 Route::post(
     '/donation/store',
     [DonationController::class, 'store']
 )->name('donation.store');
-
-Route::get(
-    '/login',
-    [AuthController::class, 'showLogin']
-)->name('login');
-
-Route::post(
-    '/login',
-    [AuthController::class, 'login']
-);
-
-Route::get(
-    '/signup',
-    [AuthController::class, 'showSignup']
-);
-
-Route::post(
-    '/signup',
-    [AuthController::class, 'signup']
-);
-
-Route::post(
-    '/logout',
-    [AuthController::class, 'logout']
-);
 
 Route::get('/test-mail', function () {
 
@@ -65,5 +24,63 @@ Route::get('/test-mail', function () {
 });
 
 
-Route::get('/campaign/failed', [CampaignController::class, 'failed'])
-    ->name('campaign.failed');
+Route::prefix('campaign')
+->controller(CampaignController::class)
+->group(function () {
+    Route::get('/{id}/donate', 'showDonate');
+
+    Route::get('/thank',  'thank') ->name('campaign.thank');
+   
+
+    Route::get('/failed', 'failed')->name('campaign.failed');
+
+    Route::get('/{id}',  'show')->whereNumber('id');
+});
+
+Route::middleware('guest')
+->controller(AuthController::class)
+->group(function () {
+
+    Route::get(
+        '/login', 'showLogin'
+    )->name('login');
+
+    Route::post(
+        '/login', 'login'
+    );
+
+    Route::get(
+        '/signup', 'showSignup'
+    );
+
+    Route::post(
+        '/signup', 'signup'
+    );
+});
+
+Route::middleware('auth')->group(function () {
+
+    Route::get('/campaign/create', [CampaignController::class, 'create']);
+
+    Route::post(
+        '/logout',
+        [AuthController::class, 'logout']
+    );
+
+    Route::post('/campaign/store', [CampaignController::class, 'store']);
+});
+
+Route::post('/create-order', [DonationController::class, 'createOrder']);
+
+Route::post(
+    '/payment/callback',
+    [DonationController::class, 'callback']
+);
+
+Route::middleware(['auth', 'admin'])->group(function () {
+
+    Route::get('/admin', function () {
+        return "Welcome Admin";
+    });
+
+});
