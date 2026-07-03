@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CampaignController;
 use App\Http\Controllers\DonationController;
+use App\Http\Controllers\AdminController;
 use App\Mail\TestMail;
 use Illuminate\Support\Facades\Mail;
 
@@ -25,38 +26,42 @@ Route::get('/test-mail', function () {
 
 
 Route::prefix('campaign')
-->controller(CampaignController::class)
-->group(function () {
-    Route::get('/{id}/donate', 'showDonate');
+    ->controller(CampaignController::class)
+    ->group(function () {
+        Route::get('/{id}/donate', 'showDonate');
 
-    Route::get('/thank',  'thank') ->name('campaign.thank');
-   
+        Route::get('/thank',  'thank')->name('campaign.thank');
 
-    Route::get('/failed', 'failed')->name('campaign.failed');
 
-    Route::get('/{id}',  'show')->whereNumber('id');
-});
+        Route::get('/failed', 'failed')->name('campaign.failed');
+
+        Route::get('/{id}',  'show')->whereNumber('id');
+    });
 
 Route::middleware('guest')
-->controller(AuthController::class)
-->group(function () {
+    ->controller(AuthController::class)
+    ->group(function () {
 
-    Route::get(
-        '/login', 'showLogin'
-    )->name('login');
+        Route::get(
+            '/login',
+            'showLogin'
+        )->name('login');
 
-    Route::post(
-        '/login', 'login'
-    );
+        Route::post(
+            '/login',
+            'login'
+        );
 
-    Route::get(
-        '/signup', 'showSignup'
-    );
+        Route::get(
+            '/signup',
+            'showSignup'
+        );
 
-    Route::post(
-        '/signup', 'signup'
-    );
-});
+        Route::post(
+            '/signup',
+            'signup'
+        );
+    });
 
 Route::middleware('auth')->group(function () {
 
@@ -77,10 +82,37 @@ Route::post(
     [DonationController::class, 'callback']
 );
 
-Route::middleware(['auth', 'admin'])->group(function () {
+Route::middleware(['auth', 'admin'])
+    ->prefix('admin')
+    ->controller(AdminController::class)
+    ->group(function () {
+        Route::get('/dashboard', 'dashboard')
+            ->name('admin.dashboard');
+        Route::get('/donations', 'donations')
+            ->name('admin.donations');
 
-    Route::get('/admin', function () {
-        return "Welcome Admin";
+        Route::get(
+            '/donations/{id}',
+            'showDonation'
+        )->name('admin.donations.show');
+
+        Route::get(
+            '/campaigns',
+            'campaigns'
+        )->name('admin.campaigns');
+
+        Route::get(
+            '/campaigns/{id}',
+            'showCampaign'
+        )->name('admin.campaigns.show');
+
+        Route::get(
+            '/users',
+            'users'
+        )->name('admin.users');
+
+        Route::get(
+            '/users/{id}',
+            'showUser'
+        )->name('admin.users.show');
     });
-
-});
