@@ -20,6 +20,10 @@
 
 <p><strong>Status:</strong> {{ $donation->payment_status }}</p>
 
+<a href="{{ route('admin.refund.create', $donation->id) }}">
+    Refund
+</a>
+
 <pre>{{ json_encode(json_decode($donation->payment_response), JSON_PRETTY_PRINT) }}</pre>
 
 @endsection

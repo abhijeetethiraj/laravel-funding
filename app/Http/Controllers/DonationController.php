@@ -62,7 +62,7 @@ class DonationController extends Controller
             );
 
             $order = $api->order->create([
-                'receipt' => 'donation_' . time(),
+                'receipt' => 'donation_' . time() .'_' . rand(1000, 9999),
                 'amount' => $request->amount * 100,
                 'currency' => 'INR',
             ]);

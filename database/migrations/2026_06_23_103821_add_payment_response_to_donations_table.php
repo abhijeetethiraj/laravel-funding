@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-       Schema::table('donations', function (Blueprint $table) {
-        $table->longText('payment_response')->nullable();
-    });
+        Schema::table('donations', function (Blueprint $table) {
+            $table->longText('payment_response')->nullable();
+        });
     }
 
     /**
@@ -22,7 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('donations', function (Blueprint $table) {
-            //
+            $table->dropColumn('payment_response');
         });
     }
 };

@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CampaignController;
 use App\Http\Controllers\DonationController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\RefundController;
 use App\Mail\TestMail;
 use Illuminate\Support\Facades\Mail;
 
@@ -115,4 +116,20 @@ Route::middleware(['auth', 'admin'])
             '/users/{id}',
             'showUser'
         )->name('admin.users.show');
+    });
+
+    Route::middleware(['auth', 'admin'])
+    ->prefix('admin')
+    ->controller(RefundController::class)
+    ->group(function () {
+
+        Route::get(
+            '/refund/{donation}',
+            'create'
+        )->name('admin.refund.create');
+
+        Route::post(
+            '/refund',
+            'store'
+        )->name('admin.refund.store');
     });

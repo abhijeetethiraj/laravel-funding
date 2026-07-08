@@ -5,21 +5,31 @@ namespace App\Repositories;
 use App\Models\User;
 use App\Models\Campaign;
 use App\Models\Donation;
+use App\Models\Refund;
 
 class AdminRepository
 {
     public function dashboard()
     {
         $totalUsers = User::count();
+
         $totalCampaigns = Campaign::count();
+
         $totalDonations = Donation::count();
-        $totalAmount = DOnation::sum('amount');
+
+        $totalAmount = Donation::sum('amount');
+
+        $totalRefundAmount = Refund::sum('amount');
+
+        $availableFunds = $totalAmount - $totalRefundAmount;
 
         return view('admin.dashboard', compact(
             'totalUsers',
             'totalCampaigns',
             'totalDonations',
-            'totalAmount'
+            'totalAmount',
+            'totalRefundAmount',
+            'availableFunds'
 
         ));
     }
