@@ -7,11 +7,56 @@
 </h1>
 
 <form method="GET" class="search-form">
-    <input type="text"
+
+    <select name="field">
+        <option value="donor_name"
+            {{ request('field') == 'donor_name' ? 'selected' : '' }}>
+            Donor Name
+        </option>
+
+        <option value="donor_email"
+            {{ request('field') == 'donor_email' ? 'selected' : '' }}>
+            Donor Email
+        </option>
+
+        <option value="payment_id"
+            {{ request('field') == 'payment_id' ? 'selected' : '' }}>
+            Payment ID
+        </option>
+
+        <option value="user_id"
+            {{ request('field') == 'user_id' ? 'selected' : '' }}>
+            User ID
+        </option>
+
+        <option value="campaign_id"
+            {{ request('field') == 'campaign_id' ? 'selected' : '' }}>
+            Campaign ID
+        </option>
+
+        <option value="payment_method"
+            {{ request('field') == 'payment_method' ? 'selected' : '' }}>
+            Payment Method
+        </option>
+
+        <option value="payment_status"
+            {{ request('field') == 'payment_status' ? 'selected' : '' }}>
+            Payment Status
+        </option>
+
+    </select>
+
+    <input
+        type="text"
         name="search"
-        placeholder="Search Name / Email / Payment ID"
-        value="{{ request('search') }}">
-    <button type="submit">Search</button>
+        placeholder="Enter Search..."
+        value="{{ request('search') }}"
+    >
+
+    <button type="submit">
+        Search
+    </button>
+
 </form>
 
 

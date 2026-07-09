@@ -5,6 +5,7 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
 use App\Http\Middleware\AdminMiddleware;
+use Illuminate\Console\Scheduling\Schedule;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -12,6 +13,14 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
     )
+
+    ->withSchedule(function (Schedule $schedule){
+          $schedule->command('app:calculate-funds')
+                ->everyMinute()
+               ->appendOutputTo(storage_path('logs/funds-output.log'));
+          $schedule->command('app:send-highest-donor')
+               ->everyTwoMinutes();
+    })
     ->withMiddleware(function (Middleware $middleware): void {
           $middleware->alias([
         'admin' => AdminMiddleware::class,

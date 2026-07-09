@@ -36,10 +36,11 @@ class AdminRepository
 
     public function donations()
     {
-        $search = request('search');
+       $search = request('search');
+         $field = request('field');
         $donation = Donation::query();
 
-        if ($search) {
+        if ($search && $field) {
             $donation->where(function ($query) use ($search) {
                 $query->where(
                     'donor_name',
